@@ -1,0 +1,353 @@
+UC1:Ability to create a Address Book Service DB
+
+MySQL [localhost ssl] SQL> show databases;
++--------------------+
+| Database           |
++--------------------+
+| employee           |
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.0009 sec)
+MySQL [localhost ssl] SQL> create database addressbook_service;
+Query OK, 1 row affected (0.2044 sec)
+MySQL [localhost ssl] SQL> show databases;
++---------------------+
+| Database            |
++---------------------+
+| addressbook_service |
+| employee            |
+| information_schema  |
+| mysql               |
+| payroll_service     |
+| performance_schema  |
+| sakila              |
+| sys                 |
+| world               |
++---------------------+
+9 rows in set (0.0387 sec)
+MySQL [localhost ssl] SQL> use addressbook_service;
+Default schema set to `addressbook_service`.
+Fetching table and column names from `addressbook_service` for auto-completion... Press ^C to stop.
+MySQL [localhost ssl/addressbook_service] SQL> SELECT DATABASE();
++---------------------+
+| DATABASE()          |
++---------------------+
+| addressbook_service |
++---------------------+
+1 row in set (0.0006 sec)
+______________________________________________________________________________________________________________________________________________________________________
+UC2:Ability to create a Address Book Table with first and last names, address, city, state, zip, phone number and email as its attributes
+
+
+MySQL [localhost ssl/addressbook_service] SQL> create table addressbook
+                                            -> (
+                                            -> firstname varchar(20) not null,
+                                            -> lastname varchar(20) not null,
+                                            -> address varchar(100) not null,
+                                            -> city varchar(20) not null,
+                                            -> state varchar(20) not null,
+                                            -> zip int unsigned not null,
+                                            -> phonenumber int unsigned not null,
+                                            -> email varchar(50) not null,
+                                            -> primary key(firstname)
+                                            -> );
+Query OK, 0 rows affected (1.3011 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc addressbook;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| firstname   | varchar(20)  | NO   | PRI | NULL    |       |
+| lastname    | varchar(20)  | NO   |     | NULL    |       |
+| address     | varchar(100) | NO   |     | NULL    |       |
+| city        | varchar(20)  | NO   |     | NULL    |       |
+| state       | varchar(20)  | NO   |     | NULL    |       |
+| zip         | int unsigned | NO   |     | NULL    |       |
+| phonenumber | int unsigned | NO   |     | NULL    |       |
+| email       | varchar(50)  | NO   |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+8 rows in set (0.0023 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC3:Ability to insert new Contacts to Address Book
+
+
+MySQL [localhost ssl/addressbook_service] SQL> insert into addressbook
+					    -> (
+					    -> firstname,lastname,address,city,state,zip,phonenumber,email) values 
+				  	    -> ( 'Riya','Das','Gopalpur','Puri','Odisha',677809,993203, 'riyadas220@gmail.com'),
+					    -> ('Rakesh','Patil','Raipur','Pune','Mumbai',400054,8977611, 'rakeshpatil555@gmail.com'), 
+					    -> ('Bina','Ray','Tollygunge','Kolkata','West Bengal',700040, 9500802,'binaroy334@gmail.com');          
+Query OK, 3 rows affected (0.1478 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook;
++-----------+----------+------------+---------+-------------+--------+-------------+--------------------------+
+| firstname | lastname | address    | city    | state       | zip    | phonenumber | email                    |
++-----------+----------+------------+---------+-------------+--------+-------------+--------------------------+
+| Bina      | Ray      | Tollygunge | Kolkata | West Bengal | 700040 |     9500802 | binaroy334@gmail.com     |
+| Rakesh    | Patil    | Raipur     | Pune    | Mumbai      | 400054 |     8977611 | rakeshpatil555@gmail.com |
+| Riya      | Das      | Gopalpur   | Puri    | Odisha      | 677809 |      993203 | riyadas220@gmail.com     |
++-----------+----------+------------+---------+-------------+--------+-------------+--------------------------+
+3 rows in set (0.1059 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC4:Ability to edit existing contact person using their name
+
+
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set state = 'Maharastra' where firstname = 'Rakesh';
+Query OK, 1 row affected (0.1817 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set address = 'Saltlake' where firstname = 'Bina';
+Query OK, 1 row affected (0.1478 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set zip = '685404' where firstname = 'Riya';
+Query OK, 1 row affected (0.1515 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook;
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+| firstname | lastname | address  | city    | state       | zip    | phonenumber | email                    |
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+| Bina      | Ray      | Saltlake | Kolkata | West Bengal | 700040 |     9500802 | binaroy334@gmail.com     |
+| Rakesh    | Patil    | Raipur   | Pune    | Maharastra  | 400054 |     8977611 | rakeshpatil555@gmail.com |
+| Riya      | Das      | Gopalpur | Puri    | Odisha      | 685404 |      993203 | riyadas220@gmail.com     |
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+3 rows in set (0.0007 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC5:Ability to delete a person using person's name
+
+
+MySQL [localhost ssl/addressbook_service] SQL> delete from addressbook where firstname = 'Riya';
+Query OK, 1 row affected (0.1726 sec)
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook;
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+| firstname | lastname | address  | city    | state       | zip    | phonenumber | email                    |
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+| Bina      | Ray      | Saltlake | Kolkata | West Bengal | 700040 |     9500802 | binaroy334@gmail.com     |
+| Rakesh    | Patil    | Raipur   | Pune    | Maharastra  | 400054 |     8977611 | rakeshpatil555@gmail.com |
++-----------+----------+----------+---------+-------------+--------+-------------+--------------------------+
+2 rows in set (0.0259 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC6: Ability to Retrieve Person belonging to a City or State from the Address Book
+
+
+MySQL [localhost ssl/addressbook_service] SQL> insert into addresbook(firstname,lastname,address,city,state,zip,phonenumber,email) values
+                                            -> ('Gaurav','Sen','Mango','Jamshedpur','Jharkhand',831001,8757859606,'gauravsen78@gmail.com');
+Query OK, 1 row affected (0.1768 sec)
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook;
++-----------+----------+----------+------------+-------------+--------+-------------+--------------------------+
+| firstname | lastname | address  | city       | state       | zip    | phonenumber | email                    |
++-----------+----------+----------+------------+-------------+--------+-------------+--------------------------+
+| Bina      | Ray      | Saltlake | Kolkata    | West Bengal | 700040 |     9500802 | binaroy334@gmail.com     |
+| Gaurav    | Sen      | Mango    | Jamshedpur | Jharkhand   | 831001 |    87578506 | gauravsen78@gmail.com    |
+| Rakesh    | Patil    | Raipur   | Pune       | Maharastra  | 400054 |     8977611 | rakeshpatil555@gmail.com |
++-----------+----------+----------+------------+-------------+--------+-------------+--------------------------+
+3 rows in set (0.0898 sec)
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook where city ='Pune';
++-----------+----------+---------+------+------------+--------+-------------+--------------------------+
+| firstname | lastname | address | city | state      | zip    | phonenumber | email                    |
++-----------+----------+---------+------+------------+--------+-------------+--------------------------+
+| Rakesh    | Patil    | Raipur  | Pune | Maharastra | 400054 |     8977611 | rakeshpatil555@gmail.com |
++-----------+----------+---------+------+------------+--------+-------------+--------------------------+
+1 row in set (0.0007 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC7:Ability to understand the count of address book by City and State
+
+
+MySQL [localhost ssl/addressbook_service] SQL> select city,count(firstname) from addressbook group by city;
++------------+------------------+
+| city       | count(firstname) |
++------------+------------------+
+| Kolkata    |                1 |
+| Jamshedpur |                1 |
+| Pune       |                1 |
++------------+------------------+
+3 rows in set (0.0010 sec)
+______________________________________________________________________________________________________________________________________________________________________
+UC8:Ability to retrieve entries sorted alphabetically by Persons name for a given city
+
+
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook where city ='Kolkata' order by firstname ASC;
++-----------+----------+----------+---------+-------------+--------+-------------+----------------------+
+| firstname | lastname | address  | city    | state       | zip    | phonenumber | email                |
++-----------+----------+----------+---------+-------------+--------+-------------+----------------------+
+| Bina      | Ray      | Saltlake | Kolkata | West Bengal | 700040 |     9500802 | binaroy334@gmail.com |
++-----------+----------+----------+---------+-------------+--------+-------------+----------------------+
+1 row in set (0.0007 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC9: Ability to identify each Address Book with name and Type.
+
+
+MySQL [localhost ssl/addressbook_service] SQL> alter table addressbook add type varchar(30) after lastname;
+Query OK, 0 rows affected (1.8167 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> desc addressbook;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| firstname   | varchar(20)  | NO   | PRI | NULL    |       |
+| lastname    | varchar(20)  | NO   |     | NULL    |       |
+| type        | varchar(30)  | YES  |     | NULL    |       |
+| address     | varchar(100) | NO   |     | NULL    |       |
+| city        | varchar(20)  | NO   |     | NULL    |       |
+| state       | varchar(20)  | NO   |     | NULL    |       |
+| zip         | int unsigned | NO   |     | NULL    |       |
+| phonenumber | int unsigned | NO   |     | NULL    |       |
+| email       | varchar(50)  | NO   |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+9 rows in set (0.1085 sec)
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set type = 'Family' where firstname = 'Bina';
+Query OK, 1 row affected (0.1444 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set type = 'Friend' where firstname = 'Gaurav';
+Query OK, 1 row affected (0.0792 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/addressbook_service] SQL> update addressbook set type = 'Profession' where firstname = 'Rakesh';
+Query OK, 1 row affected (0.1640 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+_______________________________________________________________________________________________________________________________________________________________________
+UC10:Ability to get number of contact person i.e. count by type
+
+
+MySQL [localhost ssl/addressbook_service] SQL> select type,count(type) from addressbook group by type;
++------------+-------------+
+| type       | count(type) |
++------------+-------------+
+| Family     |           1 |
+| Friend     |           1 |
+| Profession |           1 |
++------------+-------------+
+3 rows in set (0.0010 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC11: Ability to add person to both family and friend
+
+
+MySQL [localhost ssl/addressbook_service] SQL> insert into addressbook(firstname,lastname,type,address,city,state,zip,phonenumber,email) values ('Shreya','Pal','Family','Ghoshpara','Patna','Bihar',987501,89446866,'shreyapal78@gmail.com');
+Query OK, 1 row affected (0.1580 sec)
+MySQL [localhost ssl/addressbook_service] SQL> insert into addressbook(firstname,lastname,type,address,city,state,zip,phonenumber,email) values ('Nikhil','Khanna','Friend','Sector V','Gurgaon','Haryana',500901,284866,'nikhilkhanna333@gmail.com');
+Query OK, 1 row affected (0.1914 sec)
+MySQL [localhost ssl/addressbook_service] SQL> select * from addressbook;
++-----------+----------+------------+-----------+------------+-------------+--------+-------------+---------------------------+
+| firstname | lastname | type       | address   | city       | state       | zip    | phonenumber | email                     |
++-----------+----------+------------+-----------+------------+-------------+--------+-------------+---------------------------+
+| Bina      | Ray      | Family     | Saltlake  | Kolkata    | West Bengal | 700040 |     9500802 | binaroy334@gmail.com      |
+| Gaurav    | Sen      | Friend     | Mango     | Jamshedpur | Jharkhand   | 831001 |    87578506 | gauravsen78@gmail.com     |
+| Nikhil    | Khanna   | Friend     | Sector V  | Gurgaon    | Haryana     | 500901 |      284866 | nikhilkhanna333@gmail.com |
+| Rakesh    | Patil    | Profession | Raipur    | Pune       | Maharastra  | 400054 |     8977611 | rakeshpatil555@gmail.com  |
+| Shreya    | Pal      | Family     | Ghoshpara | Patna      | Bihar       | 987501 |    89446866 | shreyapal78@gmail.com     |
++-----------+----------+------------+-----------+------------+-------------+--------+-------------+---------------------------+
+5 rows in set (0.0006 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC12:Draw the ER Diagram for Address Book Service DB
+
+
+MySQL [localhost ssl/addressbook_service] SQL> create table contacts
+                                            -> (
+                                            -> firstname varchar(50) not null primary key,
+                                            -> lastname varchar(50) not null,
+                                            -> address varchar(50) not null,
+                                            -> phonenumber varchar(20) not null,
+                                            -> email varchar(50) not null
+                                            -> );
+Query OK, 0 rows affected (1.3456 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc contacts;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| firstname   | varchar(50) | NO   | PRI | NULL    |       |
+| lastname    | varchar(50) | NO   |     | NULL    |       |
+| address     | varchar(50) | NO   |     | NULL    |       |
+| phonenumber | varchar(20) | NO   |     | NULL    |       |
+| email       | varchar(50) | NO   |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+5 rows in set (0.1268 sec)
+MySQL [localhost ssl/addressbook_service] SQL> create table address
+                                            -> (
+                                            -> zip varchar(10) not null primary key,
+                                            -> city varchar(10) not null,
+                                            -> state varchar(50) not null
+                                            -> );
+Query OK, 0 rows affected (0.9473 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc address;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| zip   | varchar(10) | NO   | PRI | NULL    |       |
+| city  | varchar(10) | NO   |     | NULL    |       |
+| state | varchar(50) | NO   |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.1462 sec)
+MySQL [localhost ssl/addressbook_service] SQL> create table contact_address
+                                            -> (
+                                            -> firstname varchar(50) not null,
+                                            -> zip varchar(10) not null,
+                                            -> foreign key (firstname) references contacts(firstname),
+                                            -> foreign key (zip) references address(zip)
+                                            -> );
+Query OK, 0 rows affected (1.2171 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc contact_address;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| firstname | varchar(50) | NO   | MUL | NULL    |       |
+| zip       | varchar(10) | NO   | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.1381 sec)
+MySQL [localhost ssl/addressbook_service] SQL> create table relation
+                                            -> (
+                                            -> type varchar(50),
+                                            -> primary key(type)
+                                            -> );
+Query OK, 0 rows affected (0.3246 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc relation;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| type  | varchar(50) | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+1 row in set (0.1700 sec)
+MySQL [localhost ssl/addressbook_service] SQL> create table contact_relation
+                                            -> (
+                                            -> firstname varchar(50) not null,
+                                            -> type varchar(20),
+                                            -> foreign key (firstname) references contacts (firstname),
+                                            -> foreign key (type) references relation (type));
+Query OK, 0 rows affected (1.2891 sec)
+MySQL [localhost ssl/addressbook_service] SQL> desc contact_relation;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| firstname | varchar(50) | NO   | MUL | NULL    |       |
+| type      | varchar(20) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.0787 sec)
+_______________________________________________________________________________________________________________________________________________________________________
+UC13: Ensure all retrieve queries done especially in UC 6, UC 7, UC 8 and UC 10 are working with new table structure
+
+
+MySQL [localhost ssl/addressbook_service] SQL> select count(contacts.firstname) from contacts,contact_address,address
+                                            -> where contacts.firstname = contact_address.firstname and
+                                            -> contact_address.zip = address.zip and
+                                            -> address.state = 'West Bengal';
++---------------------------+
+| count(contacts.firstname) |
++---------------------------+
+|                         0 |
++---------------------------+
+1 row in set (0.2691 sec)
+MySQL [localhost ssl/addressbook_service] SQL> select type,count(firstname) from contact_relation;
++------+------------------+
+| type | count(firstname) |
++------+------------------+
+| NULL |                0 |
++------+------------------+
